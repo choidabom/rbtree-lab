@@ -1,7 +1,26 @@
 # Red-Black Tree 구현
-
+### SW Jungle Week05 (2022.10.20~10.27)
 Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C 언어로 구현하는 과제입니다.
 구현하는 추상 자료형 (ADT: abstract data type)은 ordered set, multiset 입니다.
+
+## TIL (Today I Learned)
+### `10.21 금`
+
+- C 학습
+    - 한 눈에 끝내는 C언어 기초
+
+### `10.22 토`
+
+- C 포인터, 구조체 학습
+- 포인터 예제로 연습 
+- C 언어 강의 - Binary Tree Array 구현 연습
+
+### `10.23 일`
+
+- BST 구현
+- 연결리스트 연습
+- RBT 원리, 이론 정리
+
 
 ## 구현 범위
 다음 기능들을 수행할 수 있도록 RB tree를 구현합니다.
