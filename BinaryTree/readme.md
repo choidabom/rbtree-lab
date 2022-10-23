@@ -27,13 +27,13 @@
     - 완전 이진 트리를 만족하면서 노드를 추가할 수 있는 자리는 하나 밖에 없음 !
     - 배열로 구현하는 경우 적합
 
----
 
 ## 이진 트리 ADT(Abstract Data Type; 추상자료형)
 - ADT는 구현 X, 기능 명세 O
-- .h 헤더파일
-    - 이진 트리 기능을 "제공"하는 소스
-    - 이진 트리 기능을 "사용"하는 소스
+- 우리가 구상한 ADT를 .h 헤더파일로 마련
+    - 이진 트리 기능을 제공하는 소스(BinaryTree.c)
+    - 헤더 파일(BinaryTree.h)
+    - 이진 트리 기능을 사용하는 소스(main.c)를 완벽하게 분리 가능!
 
 ### 이진트리의 순회
 - 이진트리의 순회방법 알기
@@ -45,43 +45,41 @@
 
 ### 이진 트리
 - 배열로 구현 vs 연결리스트로 구현
-    - 배열 
-        - 장점: 부가적인 메모리 사용 X, 간단한 연산만으로 부모자식 간 이동 O
-        - 단점: 삽입, 삭제시 노드 이동 오버헤드, 완전이진트리가 아닌 경우 메모리 낭비
-        - 배열로 트리 구현(BinaryTreeArray.c), 트리 ADT(BinaryTreeArray.h), 트리 이용(main.c)
+- 배열 
+    - 장점: 부가적인 메모리 사용 X, 간단한 연산만으로 부모자식 간 이동 O
+    - 단점: 삽입, 삭제시 노드 이동 오버헤드, 완전이진트리가 아닌 경우 메모리 낭비
+    - 배열로 트리 구현(BinaryTreeArray.c), 트리 ADT(BinaryTreeArray.h), 트리 이용(array_main.c)
 
-        - 실행 
-        ```bash
-            gcc -Og -o a BinaryTreeArray.c main.c
-            ./a
-        ```
-        - 결과
-        ```
-            전위 순회: ABDECFG
-            중위 순회: DBEAFCG
-            후위 순회: DEBFGCA
-        ```
-        
-    - 연결리스트
-        - 연결리스트로 트리 구현(BinaryTreeList.c), 트리 ADT(BinaryTreeList.h), 트리 이용(main.c)
-        - 장점: 메모리 낭비 X, 삽입, 삭제시 노드 이동 X, 트리 모양과 상관없이 메모리 사용 효율적
-        - 단점: 부가적인 메모리 필요(데이터부 + 링크부)
+    - 실행 
+    ```bash
+        gcc -Og -o a BinaryTreeArray.c main.c
+        ./a
+    ```
+    - 결과
+    ```
+        전위 순회: ABDECFG
+        중위 순회: DBEAFCG
+        후위 순회: DEBFGCA
+    ```
+    
+- 연결리스트
+    - 연결리스트로 트리 구현(BinaryTreeList.c), 트리 ADT(BinaryTreeList.h), 트리 이용(list_main.c)
+    - 장점: 메모리 낭비 X, 삽입, 삭제시 노드 이동 X, 트리 모양과 상관없이 메모리 사용 효율적
+    - 단점: 부가적인 메모리 필요(데이터부 + 링크부)
 
     - 트리 ADT 
     ```c
     // 트리 ADT(BinaryTreeArray.h)
-        typedef int Node;
+    typedef int Node;
     ```
     => Node 타입이 int 타입에서 structure pointer 타입으로 변경
     ```c
     // 트리 ADT(BinaryTreeList.h)
-        typedef struct _Node{
-            DATA data;              // 데이터부 
-            struct _Node* lchild;   // 링크부: 왼쪽 자식 
-            struct _Node* rchild;
-        } *_Node;
+    typedef struct _Node{
+        DATA data;              // 데이터부 
+        struct _Node* lchild;   // 링크부: 왼쪽 자식 
+        struct _Node* rchild;
+    } *_Node;
     ```
-
-
 
 [공부 참고 자료] (https://www.youtube.com/playlist?list=PLjq20pMYInLLWi5JBplcRZ6Z8_X5d3Tvb) 
