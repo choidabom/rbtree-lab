@@ -11,17 +11,18 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 
 ### 10.22 토
 
-- [C 언어 배열] (https://bo5mi.tistory.com/154)
-- C 언어 포인터, 구조체 학습
-- 포인터 예제로 연습 
+- [C 언어 배열](https://bo5mi.tistory.com/154)
+- [C 언어 포인터](https://bo5mi.tistory.com/155)
 - C 언어 강의 - Binary Tree Array 구현 연습
 
 ### 10.23 일
 
-- BST 구현
+- [C 언어 구조체](https://bo5mi.tistory.com/156)
 - 연결리스트 연습
-- RBT 원리, 이론 정리
 
+### 10.24
+- BinarySearchTree 구현
+- RBT 원리, 이론 정리
 
 ## 구현 범위
 다음 기능들을 수행할 수 있도록 RB tree를 구현합니다.
