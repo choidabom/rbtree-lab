@@ -23,8 +23,6 @@
 
 
 ## 5. 이진탐색트리에서 3가지 연산: 탐색/삽입/삭제
-
-<br></br>
 ### 탐색
 
 <code>searchBST(Node* root, char x)</code>:루트 노드를 주고서 우리가 찾고 싶은 x라는 key 값을 찾는다. 
