@@ -6,8 +6,7 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 ## TIL (Today I Learned)
 ### 10.21 금
 
-- C 학습
-    - [C언어 기초](https://bo5mi.tistory.com/152)
+- [C언어 기초](https://bo5mi.tistory.com/152)
 
 ### 10.22 토
 
