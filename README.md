@@ -24,7 +24,10 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 - RBT 원리, 이론 정리
 
 ### 10.25 화
-- RBT 원리, 이론 정리
+- RBT rotation, insert, insert_fixup, find 구현
+- RBT 삭제 공부
+
+### 10.26 수
 
 ## Red-Black Tree 개요
 - 자가 균형 이진 탐색 트리로서 연관 배열 등을 구현하는데 쓰이는 자료구조
