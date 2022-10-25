@@ -16,14 +16,14 @@ int main(){
     d2->numPtr = &num; // d2에 있는 Data의 메모리 주소를 역참조하여 멤버인 numPtr에 num에 num의 메모리 주소 전달
 
     printf("%d\n", *d1.numPtr); // 구조체의 멤버를 역참조
+    // *d1.numPtr == *(d1.numPtr)
     printf("%d\n", *d2->numPtr); // 구조체 포인터의 멤버를 역참조
+    // *d2->numPtr == *(d2->numPtr)
 
-    d2->c = 'b';    // 구조체 포인터 역참조하여 멤버 c에 접근해 'b' 값 넣기
-    printf("%c\n", (*d2).c);
-
-    printf("%c\n", (*d2).c);
-    printf("%d\n", *(*d2).numPtr);
-
+    // 출력결과 
+    // 10
+    // 10
+    
     free(d2); // 동적 메모리 해제
     return 0;
 }
