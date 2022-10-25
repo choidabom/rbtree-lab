@@ -19,9 +19,18 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 - [C 언어 구조체](https://bo5mi.tistory.com/156)
 - 연결리스트 연습
 
-### 10.24
+### 10.24 월
 - [C 언어 강의 - BinarySearchTree 구현](https://github.com/choidabom/rbtree-lab/tree/main/BinarySearchTree)
 - RBT 원리, 이론 정리
+
+### 10.25 화
+- RBT 원리, 이론 정리
+
+## Red-Black Tree 개요
+- 자가 균형 이진 탐색 트리로서 연관 배열 등을 구현하는데 쓰이는 자료구조
+- 높이가 h인 이진 탐색 트리에서 **삽입, 삭제, 검색** 등과 같은 동작이 O(h)의 시간에 수행될 수 있는데, 최악의 경우 (이진 탐색 트리의 높이 클 경우) 실행 속도가 일반적인 연결 리스트와 비슷한 정도에 불가하다.
+- 레드 블랙 트리는 트리가 균형을 이루도록 설계된 검색 트리 구조 중 하나이다. 자료의 삽입과 삭제, 검색의 동작이 최악의 경우에도 레드 블랙 트리의 높이인 O(logn) 시간에 수행되도록 보장한다. 
+
 
 ## 구현 범위
 다음 기능들을 수행할 수 있도록 RB tree를 구현합니다.
