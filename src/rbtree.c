@@ -373,4 +373,3 @@ int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
   free(index);
   return 0;
 }
-
