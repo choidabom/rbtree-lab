@@ -32,44 +32,22 @@ Balanced search tree로 많이 쓰이는 Red-black tree (이하 RB tree)를 C �
 - test case 통과 
 - 코드 리뷰 강의 시청
 
-## Red-Black Tree 개요
+## Red-Black Tree
 
 - 자가 균형 이진 탐색 트리로서 연관 배열 등을 구현하는데 쓰이는 자료구조
 - 높이가 h인 이진 탐색 트리에서 **삽입, 삭제, 검색** 등과 같은 동작이 O(h)의 시간에 수행될 수 있는데, 최악의 경우 (이진 탐색 트리의 높이 클 경우) 실행 속도가 일반적인 연결 리스트와 비슷한 정도에 불가하다.
 - 레드 블랙 트리는 트리가 균형을 이루도록 설계된 검색 트리 구조 중 하나이다. 자료의 삽입과 삭제, 검색의 동작이 최악의 경우에도 레드 블랙 트리의 높이인 O(logn) 시간에 수행되도록 보장한다. 
 
-<details><summary style="color:skyblue">삽입(Insert)</summary>
-<p>
-
-</p>
-</details>
-
-<details><summary style="color:skyblue">삭제(Deletion)</summary>
-<p>
-이진 트리의 삭제는 두 가지 종류가 있다. 삭제하고자 하는 노드를 Z라고 하자.
-1. **Z**가 **하나 '이하'의 자식**을 가지고 있을 경우, 그 자식노드가 **Z**의 자리를 대신하면 된다.
-2. **Z**가 **두 개의 자식**을 가질 경우, **Z**의 직후원소 **Y**를 찾고 그 노드가 **Z**의 자리를 대신하게 하면 된다. 다만, Z의 '직후원소'란, 트리 전체의 원소의 key 순서에서의 바로 다음 원소를 의미한다.
-  - 직후원소 Y가 바로 밑 자식인 경우 - 한 번의 회전이 필요
-  - 직후원소 Y가 바로 밑 자식이 아닌 경우 - 두 번의 회전이 필요
-
-</p>
-</details>
-
-
-## Red Black Tree
-
-RBT(Red-Black Tree)는 BST 를 기반으로하는 트리 형식의 자료구조이다. 결론부터 말하자면 Red-Black Tree 에 데이터를 저장하게되면 Search, Insert, Delete 에 O(log n)의 시간 복잡도가 소요된다. 동일한 노드의 개수일 때, depth 를 최소화하여 시간 복잡도를 줄이는 것이 핵심 아이디어이다. 동일한 노드의 개수일 때, depth 가 최소가 되는 경우는 tree 가 complete binary tree 인 경우이다.
-
-### Red-Black Tree 의 정의
+### Red-Black Tree 5계명
 
 Red-Black Tree 는 다음의 성질들을 만족하는 BST 이다.
 
-1.  각 노드는 `Red` or `Black`이라는 색깔을 갖는다.
-2.  Root node 의 색깔은 `Black`이다.
-3.  각 leaf node 는 `black`이다.
-4.  어떤 노드의 색깔이 `red`라면 두 개의 children 의 색깔은 모두 black 이다.
-5.  각 노드에 대해서 노드로부터 descendant leaves 까지의 단순 경로는 모두 같은 수의 black nodes 들을 포함하고 있다. 이를 해당 노드의 `Black-Height`라고 한다.
-    _cf) Black-Height: 노드 x 로부터 노드 x 를 포함하지 않은 leaf node 까지의 simple path 상에 있는 black nodes 들의 개수_
+1.  모든 노드는 `Red` or `Black`
+2.  루트는 항상 `Black`
+3.  모든 리프(NIL)는 `Black`
+4.  어떤 노드가 `Red`이면, 그 자식은 모두 `Black`
+5.  각 노드로부터 그 노드의 자손인 리프 노드로 가는 경로들은 모두 같은 수의 `Black`노드를 포함한다. 
+  -> 5번 규칙이 존재하기 때문에 RB tree는 근사적으로 균형을 맞추게 된다. 
 
 ### Red-Black Tree 의 특징
 
@@ -79,17 +57,53 @@ Red-Black Tree 는 다음의 성질들을 만족하는 BST 이다.
 
 _RBT 는 BST 의 삽입, 삭제 연산 과정에서 발생할 수 있는 문제점을 해결하기 위해 만들어진 자료구조이다. 이를 어떻게 해결한 것인가?_
 
-</br>
+<details><summary style="color:skyblue">경계 노드(Sentinel Node)</summary>
+<p>
+### 경계 노드(Sentinel Node)를 갖는 레드-블랙 트리
 
+- 한계 조건을 다루기 편리하도록 트리의 경계 노드를 만들어준다.
+- 루트의 부모와 모든 리프 노드는 NIL 노드여야 하고, 모든 리프 노드는 **Black**이어야 한다.
+```c
+// init
+rbtree *new_rbtree(void) {
+  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));      // 레드 블랙 트리를 생성한다.
+  node_t *NIL = (node_t *)calloc(1, sizeof(rbtree));    // NIL 노드를 생성한다. 
+  NIL->color = RBTREE_BLACK;                            // NIL 노드의 특성을 고려하여 색을 블랙으로 지정한다. 
+
+  p->root = NIL;                                        // 초기 트리를 NIL 노드로 설정한다.
+  p->nil = NIL;                                         // 초기 닐을 NIL 노드로 설정한다. 
+  
+  return p;
+}
+```
+</p>
+</details>
+
+<details><summary style="color:skyblue">회전(Rotate)</summary>
+<p>
+### 회전(Rotate)
+
+- RB tree 삽입(insert), 삭제(delete) 연산 과정에서 트리가 수정되기 때문에 RB tree의 특성을 위반할 수 있다. 이런 특성을 복구해주기 위해서 트리 내의 일부 노드들의 색깔과 포인터를 변경해야 한다.
+</p>
+</details>
+
+<details><summary style="color:skyblue">삽입(Insert)</summary>
+<p>
 ### 삽입
 
 우선 BST 의 특성을 유지하면서 노드를 삽입을 한다. 그리고 삽입된 노드의 색깔을 **RED 로** 지정한다. Red 로 지정하는 이유는 Black-Height 변경을 최소화하기 위함이다. 삽입 결과 RBT 의 특성 위배(violation)시 노드의 색깔을 조정하고, Black-Height 가 위배되었다면 rotation 을 통해 height 를 조정한다. 이러한 과정을 통해 RBT 의 동일한 height 에 존재하는 internal node 들의 Black-height 가 같아지게 되고 최소 경로와 최대 경로의 크기 비율이 2 미만으로 유지된다.
+</p>
+</details>
 
+<details><summary style="color:skyblue">삭제(Deletion)</summary>
+<p>
 ### 삭제
 
 삭제도 삽입과 마찬가지로 BST 의 특성을 유지하면서 해당 노드를 삭제한다. 삭제될 노드의 child 의 개수에 따라 rotation 방법이 달라지게 된다. 그리고 만약 지워진 노드의 색깔이 Black 이라면 Black-Height 가 1 감소한 경로에 black node 가 1 개 추가되도록 rotation 하고 노드의 색깔을 조정한다. 지워진 노드의 색깔이 red 라면 Violation 이 발생하지 않으므로 RBT 가 그대로 유지된다.
 
 Java Collection 에서 TreeMap 도 내부적으로 RBT 로 이루어져 있고, HashMap 에서의 `Separate Chaining`에서도 사용된다. 그만큼 효율이 좋고 중요한 자료구조이다.
+</p>
+</details>
 
 ## 구현 범위
 다음 기능들을 수행할 수 있도록 RB tree를 구현합니다.
