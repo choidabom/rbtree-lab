@@ -49,60 +49,97 @@ Red-Black Tree 는 다음의 성질들을 만족하는 BST 이다.
 5.  각 노드로부터 그 노드의 자손인 리프 노드로 가는 경로들은 모두 같은 수의 `Black`노드를 포함한다. 
   -> 5번 규칙이 존재하기 때문에 RB tree는 근사적으로 균형을 맞추게 된다. 
 
-### Red-Black Tree 의 특징
+### _RBT는 왜, 어디서 쓰는가?_
 
-1.  Binary Search Tree 이므로 BST 의 특징을 모두 갖는다.
-2.  Root node 부터 leaf node 까지의 모든 경로 중 최소 경로와 최대 경로의 크기 비율은 2 보다 크지 않다. 이러한 상태를 `balanced` 상태라고 한다.
-3.  노드의 child 가 없을 경우 child 를 가리키는 포인터는 NIL 값을 저장한다. 이러한 NIL 들을 leaf node 로 간주한다.
+#### Why?
+- Red-Black Tree는 BST 의 삽입, 삭제 연산 과정에서 발생할 수 있는 문제점을 해결하기 위해 만들어진 자료구조이다.
 
-_RBT 는 BST 의 삽입, 삭제 연산 과정에서 발생할 수 있는 문제점을 해결하기 위해 만들어진 자료구조이다. 이를 어떻게 해결한 것인가?_
+#### Where?
+1. Java Collection API의 Map Interface 구현체인 HashMap의 Seperate Chaining 구현에서 사용한다.
+  - Key 값의 Collision이 발생할 경우 같은 Hash 값을 가지는 원소들을 Collection으로 관리하는데, 이 때 원소의 개수가 많아지면 Red-Black 트리를 이용해서 관리하여 연산 시간을 O(logn)으로 관리한다.
+
+2. RB-Tree 는 Radix-Tree와 더불어 Linux Kernel에서 가장 많이 사용하는 Tree 자료구조이다.
+  - I/O scheduler(CFQ, deadline 등), ext filesystem, Virtual memory areas 등 Kernel의 여러 Subsystem에서 사용된다. 
+  - 기존 Tree자료구조의 단점은 최악의 경우 노드가 Linked-List의 형태로 저장되어 탐색 시간복잡도가 O(N) 이 된다는 점이다. 하지만 RB Tree는 노드의 삽입과 삭제가 이루어 질때, Tree가 자동으로 회전하며 O(logN)의 시간복잡도를 보장한다.
+  - [linux/lib/rbtree_test.c](https://github.com/torvalds/linux/blob/master/lib/rbtree_test.c)
+
+3. Linux의 기본 스케줄러인 CFS 스케줄링 알고리즘에서 사용한다.
+  - 테스크의 소요 시간 기준으로 프로세스를 관리하기 위해 Red-Black 트리를 이용해서 스케줄링을 관리한다. 
+
+
+<details><summary style="color:skyblue">**Interesting Point**</summary>
+
+[과제에서 주어진 rbtree.h 내의 node_t 구조체 선언]
+```c
+typedef struct node_t {
+  color_t color;
+  key_t key;
+  struct node_t *parent, *left, *right;
+} node_t;
+```
+[Linux Kernel RB Tree 구조체 선언]
+```c
+struct rb_node {  
+	unsigned long  __rb_parent_color; /* rb parent and color */  
+	struct rb_node *rb_right;  
+	struct rb_node *rb_left;  
+} __attribute__((aligned(sizeof(long))));
+```
+#### Q. 왜 Linux Kernel RB Tree 구조체 선언에서는 parent와 color가 한 자료형으로 선언되었는가?
+#### A. 결론적으론 메모리 공간의 낭비를 줄이기 위해 
+
+- `__rb_parent_color`에는 부모 노드의 주소값이 long으로 형변환되어 저장된다. 
+- **주소는 4 혹은 8의 배수로 증가**하기 때문에 하위 2~3비트는 사용되지 않는다.
+  -  8(10) ->  1000(2)
+  - 16(10) -> 10000(2) 
+  - 24(10) -> 11000(2)
+  - 8의 배수를 확인해봤을 때, 하위 2~3비트가 사용되지 않는 것을 확인할 수 있다. 컴퓨터는 다 알고 있다..!
+- **즉, rb_node에서는 이 사용하지 않는 비트를 색 지정을 사용하여 추가 변수를 사용하지 않아 메모리 공간을 절약할 수 있다.**
+- `rb_parent_color` 멤버 변수를 통해 부모 노드 주소와 본인 노드 색 두 가지를 동시에 가질 수 있다. 
+- `__rb_parent_color` 변수의 더 정확한 의미는 rb parent and color이다.
+
+- 과거 Linux Kernel 2.4.31의 rb_node 구조체 과거에는 rb_parent와 rb_color가 독립적인 변수로 존재하는것을 알 수 있다. 상대적으로 메모리 공간이 더 낭비 되었을 것임을 확인할 수 있다. 
+```c
+typedef struct rb_node_s
+{
+        struct rb_node_s * rb_parent;
+        int rb_color;
+#define RB_RED          0
+#define RB_BLACK        1
+        struct rb_node_s * rb_right;
+        struct rb_node_s * rb_left;
+}
+rb_node_t;
+```
+
+</details>
+
+
+
 
 <details><summary style="color:skyblue">경계 노드(Sentinel Node)</summary>
-<p>
-### 경계 노드(Sentinel Node)를 갖는 레드-블랙 트리
 
 - 한계 조건을 다루기 편리하도록 트리의 경계 노드를 만들어준다.
 - 루트의 부모와 모든 리프 노드는 NIL 노드여야 하고, 모든 리프 노드는 **Black**이어야 한다.
-```c
-// init
-rbtree *new_rbtree(void) {
-  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));      // 레드 블랙 트리를 생성한다.
-  node_t *NIL = (node_t *)calloc(1, sizeof(rbtree));    // NIL 노드를 생성한다. 
-  NIL->color = RBTREE_BLACK;                            // NIL 노드의 특성을 고려하여 색을 블랙으로 지정한다. 
 
-  p->root = NIL;                                        // 초기 트리를 NIL 노드로 설정한다.
-  p->nil = NIL;                                         // 초기 닐을 NIL 노드로 설정한다. 
-  
-  return p;
-}
-```
-</p>
 </details>
 
 <details><summary style="color:skyblue">회전(Rotate)</summary>
-<p>
-### 회전(Rotate)
 
 - RB tree 삽입(insert), 삭제(delete) 연산 과정에서 트리가 수정되기 때문에 RB tree의 특성을 위반할 수 있다. 이런 특성을 복구해주기 위해서 트리 내의 일부 노드들의 색깔과 포인터를 변경해야 한다.
-</p>
+
 </details>
 
 <details><summary style="color:skyblue">삽입(Insert)</summary>
-<p>
-### 삽입
 
 우선 BST 의 특성을 유지하면서 노드를 삽입을 한다. 그리고 삽입된 노드의 색깔을 **RED 로** 지정한다. Red 로 지정하는 이유는 Black-Height 변경을 최소화하기 위함이다. 삽입 결과 RBT 의 특성 위배(violation)시 노드의 색깔을 조정하고, Black-Height 가 위배되었다면 rotation 을 통해 height 를 조정한다. 이러한 과정을 통해 RBT 의 동일한 height 에 존재하는 internal node 들의 Black-height 가 같아지게 되고 최소 경로와 최대 경로의 크기 비율이 2 미만으로 유지된다.
-</p>
+
 </details>
 
 <details><summary style="color:skyblue">삭제(Deletion)</summary>
-<p>
-### 삭제
 
 삭제도 삽입과 마찬가지로 BST 의 특성을 유지하면서 해당 노드를 삭제한다. 삭제될 노드의 child 의 개수에 따라 rotation 방법이 달라지게 된다. 그리고 만약 지워진 노드의 색깔이 Black 이라면 Black-Height 가 1 감소한 경로에 black node 가 1 개 추가되도록 rotation 하고 노드의 색깔을 조정한다. 지워진 노드의 색깔이 red 라면 Violation 이 발생하지 않으므로 RBT 가 그대로 유지된다.
 
-Java Collection 에서 TreeMap 도 내부적으로 RBT 로 이루어져 있고, HashMap 에서의 `Separate Chaining`에서도 사용된다. 그만큼 효율이 좋고 중요한 자료구조이다.
-</p>
 </details>
 
 ## 구현 범위
